@@ -9,8 +9,7 @@ const bodyParser = require("body-parser");
 const rmRf = require("rimraf");
 const ip = require("ip");
 const SMTMemDB = require("circomlib/src/smt_memdb");
-const { unstringifyBigInts } = require("ffjavascript").utils;
-
+const { unstringifyBigInts, stringifyBigInts } = require("ffjavascript").utils;
 const { SMTLevelDb } = require("../../../../rollup-utils/smt-leveldb");
 const RollupDB = require("../../../../js/rollupdb");
 const MemDb = require("../../../../rollup-utils/mem-db");
@@ -27,6 +26,7 @@ const CliServerProof = require("../../cli-proof-server");
 const LoopManager = require("../../proof-of-burn/loop-manager-pob");
 const Constants = require("../../constants");
 const { checkEnvVariables, checkPassEnv, getPassword } = require("../utils");
+const { stringify } = require("querystring");
 
 const { argv } = require("yargs")
     .usage(`
@@ -421,6 +421,7 @@ function loadServer(flagForge, expose, flagLAN, operatorMode){
             logger.http(infoHttpPost);
 
             apiMethods.initStateApi();
+            apiMethods.initChainStateApi();
             apiMethods.initOperarorsApi();
             apiMethods.initExitsApi();
             apiMethods.initAccountsApi();
@@ -441,10 +442,16 @@ function loadServer(flagForge, expose, flagLAN, operatorMode){
                 const tx = unstringifyBigInts(req.body);
                 try {
                     const isAdded = await pool.addTx(tx);
-                    if (isAdded === false)
-                        res.status(400).send("Error adding transaction to pool");   
+                    let ts = {};
+                    ts['hash'] = isAdded;
+                    // if (isAdded === false)
+                    //     res.status(400).send("Error adding transaction to pool");   
+                    // else
+                    //     res.sendStatus(200);
+                    if (isAdded)
+                        res.sendStatus(200).json(stringifyBigInts(ts));
                     else
-                        res.sendStatus(200);
+                        res.status(400).send("Error adding transaction to pool"); 
                 } catch (error) {
                     logger.error(`Message error: ${error.message}`);
                     logger.debug(`Message error: ${error.stack}`);

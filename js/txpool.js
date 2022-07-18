@@ -263,7 +263,8 @@ class TXPool {
         });
 
         await this._updateSlots();
-        return true;
+        // return true;
+        return txid;
     }
 
     /**
