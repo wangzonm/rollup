@@ -1,4 +1,4 @@
-const { assert, expect } = require("chai");
+#const { assert, expect } = require("chai");
 const Scalar = require("ffjavascript").Scalar;
 const lodash = require("lodash");
 
