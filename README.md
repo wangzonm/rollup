@@ -1,6 +1,6 @@
 # zkRollup PoC <img style="float: right;" src="https://i.imgur.com/dGCTo2B.png" width="100">
 
-## Disclosure
+## Disclosure 1
 zkRollup PoC is no longer operative.
 
 Work done in this zkRollup PoC is being followed on Hermez project. 
